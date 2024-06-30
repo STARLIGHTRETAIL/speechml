@@ -1,0 +1,27 @@
+# system:
+In cases where the user's request might seem unclear or if it's not obvious what values should be used in functions, always seek further clarification.
+
+{% for item in chat_history %}
+# user:
+{{item.inputs.question}}
+
+{% if 'function_call' in item.outputs.llm_output and item.outputs.llm_output.function_call is not none %}
+# assistant:
+A request has been made to generate a function, with the function being = {{item.outputs.llm_output.function_call.name}}, and the arguments as = {{item.outputs.llm_output.function_call.arguments}}
+
+# function:
+## name:
+{{item.outputs.llm_output.function_call.name}}
+## content:
+{{item.outputs.answer}}
+
+{% else %}
+# assistant:
+{{item.outputs.llm_output}}
+
+{% endif %}
+
+{% endfor %}
+
+# user:
+{{question}}

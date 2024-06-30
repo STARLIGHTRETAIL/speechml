@@ -1,0 +1,46 @@
+- name: chunkProductDocuments
+  type: python
+  source:
+    type: code
+    path: chunkProductDocuments.py
+  inputs:
+    data_source: Azure AI Search
+    max_tokens: 1050
+    queries: ${extractSearchIntent.output}
+    query_type: Keyword
+    results: ${queryProductIndex.output}
+    top_k: 5
+  use_variants: false
+- name: selectProductChunks
+  type: python
+  source:
+    type: code
+    path: filterChunks.py
+  inputs:
+    min_score: 0.3
+    results: ${chunkProductDocuments.output}
+    top_k: 5
+  use_variants: false
+- name: chunkCustomerDocuments
+  type: python
+  source:
+    type: code
+    path: chunkCustomerDocuments.py
+  inputs:
+    data_source: Azure AI Search
+    max_tokens: 1050
+    queries: ${extractSearchIntent.output}
+    query_type: Keyword
+    results: ${queryCustomerIndex.output}
+    top_k: 5
+  use_variants: false
+- name: selectCustomerChunks
+  type: python
+  source:
+    type: code
+    path: filterChunks.py
+  inputs:
+    min_score: 0.3
+    results: ${chunkCustomerDocuments.output}
+    top_k: 5
+  use_variants: false
